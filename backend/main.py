@@ -275,6 +275,65 @@ async def list_assembly_members():
         raise HTTPException(status_code=502, detail="Could not load the official Assembly member directory.") from exc
 
 
+@app.get("/api/search")
+async def search_assembly_records(
+    q: str = Query(min_length=2, max_length=120),
+    limit: int = Query(default=30, ge=1, le=50),
+):
+    """Search actual transcript text and titles stored in the Assembly database."""
+    query = q.strip()
+    if len(query) < 2:
+        return {"query": query, "results": []}
+    connection = connect_legislative_database()
+    try:
+        pattern = f"%{query}%"
+        rows = connection.execute("""
+            WITH matching_segments AS (
+                SELECT v.video_id, v.title, v.title_english, v.url, v.published_at,
+                       s.start_seconds, s.end_seconds, s.text, s.text_english,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY v.video_id
+                           ORDER BY CASE
+                               WHEN s.text LIKE ? COLLATE NOCASE
+                                 OR s.text_english LIKE ? COLLATE NOCASE THEN 0
+                               ELSE 1
+                           END, s.start_seconds, s.id
+                       ) AS match_rank
+                FROM transcript_segments s
+                JOIN videos v ON v.video_id = s.video_id
+                WHERE s.text LIKE ? COLLATE NOCASE
+                   OR s.text_english LIKE ? COLLATE NOCASE
+                   OR v.title LIKE ? COLLATE NOCASE
+                   OR COALESCE(v.title_english, '') LIKE ? COLLATE NOCASE
+            )
+            SELECT video_id, title, title_english, url, published_at,
+                   start_seconds, end_seconds, text, text_english
+            FROM matching_segments
+            WHERE match_rank = 1
+            ORDER BY published_at DESC, title
+            LIMIT ?
+        """, (pattern, pattern, pattern, pattern, pattern, pattern, limit)).fetchall()
+        return {
+            "query": query,
+            "results": [{
+                "video_id": row["video_id"],
+                "title": row["title"],
+                "title_english": row["title_english"],
+                "url": row["url"],
+                "published_at": row["published_at"],
+                "start_seconds": row["start_seconds"],
+                "end_seconds": row["end_seconds"],
+                "text": row["text"],
+                "text_english": row["text_english"],
+            } for row in rows],
+        }
+    except sqlite3.OperationalError as exc:
+        logger.exception("Could not search Assembly transcript records")
+        raise HTTPException(status_code=503, detail="Transcript database is not ready for search.") from exc
+    finally:
+        connection.close()
+
+
 @app.get("/api/videos")
 async def list_transcript_videos(limit: int = Query(default=10, ge=1, le=500)):
     """List videos that have transcript segments available for summarizing."""

@@ -38,6 +38,17 @@
 .member-directory-error a { display:inline-flex; align-items:center; gap:6px; color:var(--blue); font-weight:700; }
 @media(min-width:560px) { .member-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
 @media(min-width:850px) { .member-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+.search-clear { display:grid; place-items:center; padding:0; color:var(--muted); background:transparent; }
+.search-status { margin:12px 0; color:var(--muted); font-size:calc(12px * var(--type-scale, 1)); }
+.search-record-card,.search-member-card { min-width:0; padding:12px; border:1px solid var(--border); border-radius:13px; background:var(--card); box-shadow:var(--shadow); }
+.search-record-card>small,.search-member-card>small { display:block; color:var(--muted); font-size:calc(10px * var(--type-scale, 1)); }
+.search-record-card h3 { margin:4px 0 7px; color:var(--text); font-size:calc(13px * var(--type-scale, 1)); line-height:1.45; }
+.search-record-card p { margin:0 0 9px; color:var(--text); font-size:calc(12px * var(--type-scale, 1)); line-height:1.65; }
+.search-record-card>a { display:inline-flex; align-items:center; gap:5px; color:var(--blue); text-decoration:none; font-size:calc(11px * var(--type-scale, 1)); font-weight:700; }
+.search-member-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.search-member-card .member-photo-wrap { margin-bottom:8px; }
+.search-member-card>strong { display:block; overflow:hidden; color:var(--text); font-size:calc(11px * var(--type-scale, 1)); line-height:1.35; text-overflow:ellipsis; }
+@media(min-width:560px) { .search-member-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
 .latest-updates-heading { margin-top: 0; }
 .updates-list { margin-bottom: 8px; }
 .video-summaries { margin-top: 20px; }

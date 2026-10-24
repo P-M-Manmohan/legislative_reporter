@@ -10,7 +10,7 @@ const LanguageContext = createContext('EN');
 const malayalamUi = {
   Home: 'ഹോം', Search: 'തിരയുക', Verify: 'പരിശോധിക്കുക', MLAs: 'എം.എൽ.എമാർ', More: 'കൂടുതൽ',
   'Your window to Kerala Legislature': 'കേരള നിയമസഭയിലേക്കുള്ള നിങ്ങളുടെ ജാലകം', 'KERALA LEGISLATURE': 'കേരള നിയമസഭ', 'Serving the people of Kerala': 'കേരള ജനതയ്ക്കായി',
-  'Search questions, MLAs, topics...': 'ചോദ്യങ്ങൾ, എം.എൽ.എമാർ, വിഷയങ്ങൾ തിരയുക...', 'Search in questions...': 'ചോദ്യങ്ങളിൽ തിരയുക...', 'Assembly session': 'നിയമസഭാ സമ്മേളനം', 'Kerala Legislative Assembly': 'കേരള നിയമസഭ', 'Question Hour': 'ചോദ്യോത്തര വേള', 'Watch Now': 'ഇപ്പോൾ കാണുക',
+  'Search questions, MLAs, topics...': 'ചോദ്യങ്ങൾ, എം.എൽ.എമാർ, വിഷയങ്ങൾ തിരയുക...', 'Search in questions...': 'ചോദ്യങ്ങളിൽ തിരയുക...', 'Search Assembly records...': 'നിയമസഭാ രേഖകൾ തിരയുക...', 'Enter at least 2 characters to search records.': 'രേഖകൾ തിരയാൻ കുറഞ്ഞത് 2 അക്ഷരങ്ങൾ നൽകുക.', 'Searching official transcripts and MLA records…': 'ഔദ്യോഗിക ട്രാൻസ്ക്രിപ്റ്റുകളും എം.എൽ.എ രേഖകളും തിരയുന്നു…', 'Transcript matches': 'ട്രാൻസ്ക്രിപ്റ്റ് പൊരുത്തങ്ങൾ', 'MLA matches': 'എം.എൽ.എ പൊരുത്തങ്ങൾ', 'Open at': 'സമയത്ത് തുറക്കുക', 'No matching Assembly records found.': 'പൊരുത്തപ്പെടുന്ന നിയമസഭാ രേഖകളൊന്നും കണ്ടെത്തിയില്ല.', 'Assembly search is unavailable. Check that the backend is running.': 'നിയമസഭാ തിരയൽ ലഭ്യമല്ല. ബാക്കെൻഡ് പ്രവർത്തിക്കുന്നുണ്ടെന്ന് ഉറപ്പാക്കുക.', 'Assembly session': 'നിയമസഭാ സമ്മേളനം', 'Kerala Legislative Assembly': 'കേരള നിയമസഭ', 'Question Hour': 'ചോദ്യോത്തര വേള', 'Watch Now': 'ഇപ്പോൾ കാണുക',
   'Video summaries': 'വീഡിയോ സംഗ്രഹങ്ങൾ', 'Assembly video': 'നിയമസഭാ വീഡിയോ', 'transcript segments': 'ട്രാൻസ്ക്രിപ്റ്റ് ഭാഗങ്ങൾ', 'Show summary': 'സംഗ്രഹം കാണിക്കുക', 'Hide summary': 'സംഗ്രഹം മറയ്ക്കുക', 'Loading summary…': 'സംഗ്രഹം ലോഡ് ചെയ്യുന്നു…', 'Transcript summary · tap a sentence to view source timestamps.': 'ട്രാൻസ്ക്രിപ്റ്റ് സംഗ്രഹം · ഉറവിട സമയമുദ്രകൾ കാണാൻ വാക്യത്തിൽ അമർത്തുക.', 'Verify in the original video': 'യഥാർത്ഥ വീഡിയോയിൽ പരിശോധിക്കുക', 'Saved with this video’s transcript.': 'ഈ വീഡിയോയുടെ ട്രാൻസ്ക്രിപ്റ്റിനൊപ്പം സംരക്ഷിച്ചു.', 'No transcript videos are available yet.': 'ട്രാൻസ്ക്രിപ്റ്റുള്ള വീഡിയോകൾ ലഭ്യമല്ല.',
   'Assembly live session': 'നിയമസഭാ തത്സമയ സമ്മേളനം', 'Live stream': 'തത്സമയ സംപ്രേഷണം', 'The app cannot confirm an active live stream right now. Check the official Assembly webcast for the current broadcast.': 'ഇപ്പോൾ തത്സമയ സംപ്രേഷണം ലഭ്യമാണെന്ന് ആപ്പിന് സ്ഥിരീകരിക്കാനാകുന്നില്ല. നിലവിലെ സംപ്രേഷണത്തിനായി ഔദ്യോഗിക നിയമസഭാ വെബ്‌കാസ്റ്റ് പരിശോധിക്കുക.', 'Open official webcast': 'ഔദ്യോഗിക വെബ്‌കാസ്റ്റ് തുറക്കുക', 'Next scheduled live session': 'അടുത്തതായി നിശ്ചയിച്ച തത്സമയ സമ്മേളനം', 'No later sitting time is available in the currently published Assembly calendar. Check the official notices for the next announcement.': 'പ്രസിദ്ധീകരിച്ച നിയമസഭാ കലണ്ടറിൽ തുടർന്നുള്ള സമ്മേളന സമയം ലഭ്യമല്ല. അടുത്ത അറിയിപ്പിനായി ഔദ്യോഗിക അറിയിപ്പുകൾ പരിശോധിക്കുക.', 'Official sitting calendar': 'ഔദ്യോഗിക സമ്മേളന കലണ്ടർ', 'Session summons': 'സമ്മേളന അറിയിപ്പ്', 'at 9:00 AM IST. The session summons lists 9:00 AM as the meeting time; check the official notices or webcast in case the schedule changes.': 'രാവിലെ 9:00 IST-ന്. സമ്മേളന അറിയിപ്പിൽ രാവിലെ 9:00 ആണ് യോഗസമയം; മാറ്റങ്ങൾക്കായി ഔദ്യോഗിക അറിയിപ്പുകളോ വെബ്‌കാസ്റ്റോ പരിശോധിക്കുക.',
   'Trending topics': 'പ്രവണതയിലുള്ള വിഷയങ്ങൾ', 'Choose a topic to explore related Assembly questions.': 'ബന്ധപ്പെട്ട നിയമസഭാ ചോദ്യങ്ങൾ കാണാൻ ഒരു വിഷയം തിരഞ്ഞെടുക്കുക.', 'Select a topic to view related Assembly questions.': 'ബന്ധപ്പെട്ട നിയമസഭാ ചോദ്യങ്ങൾ കാണാൻ വിഷയം തിരഞ്ഞെടുക്കുക.', 'Select a topic to view related verified MLA records.': 'ബന്ധപ്പെട്ട സ്ഥിരീകരിച്ച എം.എൽ.എ രേഖകൾ കാണാൻ വിഷയം തിരഞ്ഞെടുക്കുക.', 'Select an MLA to view verified profile details and Assembly activity.': 'സ്ഥിരീകരിച്ച പ്രൊഫൈൽ വിവരങ്ങളും നിയമസഭാ പ്രവർത്തനങ്ങളും കാണാൻ ഒരു എം.എൽ.എയെ തിരഞ്ഞെടുക്കുക.', 'No questions match your search.': 'നിങ്ങളുടെ തിരയലിന് പൊരുത്തപ്പെടുന്ന ചോദ്യങ്ങളില്ല.', 'No verified MLA profiles or questions are available right now.': 'സ്ഥിരീകരിച്ച എം.എൽ.എ പ്രൊഫൈലുകളോ ചോദ്യങ്ങളോ ഇപ്പോൾ ലഭ്യമല്ല.', 'Recent Questions': 'സമീപകാല ചോദ്യങ്ങൾ', Topics: 'വിഷയങ്ങൾ', All: 'എല്ലാം', Questions: 'ചോദ്യങ്ങൾ', results: 'ഫലങ്ങൾ', Filter: 'ഫിൽട്ടർ',
@@ -306,7 +306,92 @@ function formatVideoDate(value, language = 'EN') {
   const date = new Date(normalized);
   return Number.isNaN(date.getTime()) ? 'Assembly video' : date.toLocaleDateString(language === 'EN' ? 'en-IN' : 'ml-IN');
 }
-function SearchPage({ setScreen, openQuestion }) { const [query, setQuery] = useState(''); const [tab, setTab] = useState('All'); const tr = useT(); const list = useMemo(() => questions.filter((q) => `${q.title} ${q.mla} ${q.category}`.toLowerCase().includes(query.toLowerCase()) && (tab === 'All' || tab === 'Questions' || tab === 'MLAs')), [query, tab]); return <section className="screen-pad"><TopBar title="Search" onBack={() => setScreen('home')} actions={<button className="icon-button" aria-label={tr('Filter')}><Filter size={18} /></button>} /><div className="search-box filled"><Search size={17} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={tr('Search in questions...')} /><X size={16} onClick={() => setQuery('')} /></div><div className="tabs">{['All', 'Questions', 'MLAs', 'Topics'].map((item) => <button className={tab === item ? 'active' : ''} key={item} onClick={() => setTab(item)}>{tr(item)}</button>)}</div><div className="result-count">{list.length} {tr('results')} • {tr('Question Hour')}</div><div className="results">{list.map((q) => <QuestionCard key={q.id} question={q} onClick={() => openQuestion(q)} />)}</div>{!list.length && <EmptyState text="No questions match your search." />}</section>; }
+function SearchPage({ setScreen }) {
+  const [query, setQuery] = useState('');
+  const [tab, setTab] = useState('All');
+  const [transcripts, setTranscripts] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const language = useContext(LanguageContext);
+  const tr = useT();
+  useEffect(() => {
+    const searchTerm = query.trim();
+    if (searchTerm.length < 2) {
+      setTranscripts([]);
+      setMembers([]);
+      setLoading(false);
+      setError(false);
+      return undefined;
+    }
+    let active = true;
+    const timeout = window.setTimeout(async () => {
+      setLoading(true);
+      setError(false);
+      try {
+        const requests = [];
+        if (tab !== 'MLAs') requests.push(apiFetch(`/api/search?q=${encodeURIComponent(searchTerm)}&limit=30`));
+        else requests.push(Promise.resolve({ results: [] }));
+        if (tab === 'All' || tab === 'MLAs') requests.push(apiFetch('/api/members'));
+        else requests.push(Promise.resolve({ members: [] }));
+        const [transcriptData, memberData] = await Promise.all(requests);
+        if (!active) return;
+        setTranscripts(Array.isArray(transcriptData.results) ? transcriptData.results : []);
+        const memberRecords = Array.isArray(memberData.members) ? memberData.members : [];
+        const normalizedQuery = searchTerm.toLocaleLowerCase();
+        setMembers(memberRecords.filter((member) =>
+          `${member.name} ${member.constituency}`.toLocaleLowerCase().includes(normalizedQuery)
+        ));
+      } catch {
+        if (active) setError(true);
+      } finally {
+        if (active) setLoading(false);
+      }
+    }, 250);
+    return () => { active = false; window.clearTimeout(timeout); };
+  }, [query, tab]);
+
+  const formatTimestamp = (value) => {
+    const seconds = Math.max(0, Math.floor(Number(value) || 0));
+    return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+  };
+  const timestampUrl = (record) => {
+    try {
+      const url = new URL(record.url);
+      url.searchParams.set('t', String(Math.floor(Number(record.start_seconds) || 0)));
+      return url.toString();
+    } catch { return record.url; }
+  };
+  const resultCount = (tab === 'MLAs' ? members.length : transcripts.length)
+    + (tab === 'All' ? members.length : 0);
+  return <section className="screen-pad">
+    <TopBar title="Search" onBack={() => setScreen('home')} />
+    <div className="search-box filled"><Search size={17} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={tr('Search Assembly records...')} /><button type="button" className="search-clear" aria-label="Clear search" onClick={() => setQuery('')}><X size={16} /></button></div>
+    <div className="tabs">{['All', 'Questions', 'MLAs', 'Topics'].map((item) => <button className={tab === item ? 'active' : ''} key={item} onClick={() => setTab(item)}>{tr(item)}</button>)}</div>
+    {query.trim().length < 2 ? <EmptyState text="Enter at least 2 characters to search records." /> : <>
+      {loading && <p className="search-status" role="status">{tr('Searching official transcripts and MLA records…')}</p>}
+      {error && <p className="search-status" role="alert">{tr('Assembly search is unavailable. Check that the backend is running.')}</p>}
+      {!loading && !error && <div className="result-count">{resultCount} {tr('results')}</div>}
+      {tab !== 'MLAs' && transcripts.length > 0 && <>
+        <h2 className="section-title">{tr('Transcript matches')}</h2>
+        <div className="results">{transcripts.map((record, index) => <article className="search-record-card" key={`${record.video_id}-${record.start_seconds}-${index}`}>
+          <small>{tr('Assembly video')}{record.published_at ? ` · ${record.published_at}` : ''}</small>
+          <h3>{language === 'EN' ? (record.title_english || record.title) : record.title}</h3>
+          <p>{language === 'EN' ? (record.text_english || record.text) : record.text}</p>
+          <a href={timestampUrl(record)} target="_blank" rel="noreferrer">{tr('Open at')} {formatTimestamp(record.start_seconds)} <ExternalLink size={14} /></a>
+        </article>)}</div>
+      </>}
+      {(tab === 'All' || tab === 'MLAs') && members.length > 0 && <>
+        <h2 className="section-title">{tr('MLA matches')}</h2>
+        <div className="search-member-grid">{members.map((member) => <article className="search-member-card" key={member.constituency_number}>
+          <div className="member-photo-wrap"><span className="member-initials">{member.name.split(/\s+/).filter((part) => !/^(Shri|Smt\.?|Miss\.?|Prof\.?|Dr\.?)$/i.test(part)).slice(0, 2).map((part) => part[0]).join('').toUpperCase()}</span>{member.image_url && <img className="member-photo" src={member.image_url} alt={member.name} loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />}</div>
+          <strong>{member.name}</strong><small>{member.constituency}</small>
+        </article>)}</div>
+      </>}
+      {!loading && !error && resultCount === 0 && <EmptyState text="No matching Assembly records found." />}
+    </>}
+  </section>;
+}
 function TopicsPage({ setScreen, openQuestion }) {
   const tr = useT();
   const location = useLocation();

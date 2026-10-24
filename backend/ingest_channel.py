@@ -246,6 +246,7 @@ def save_transcript(video_id, segments):
         conn.execute("""
             UPDATE videos
             SET summary = NULL,
+                summary_english = NULL,
                 transcript_status = 'completed',
                 transcript_error = NULL,
                 updated_at = CURRENT_TIMESTAMP

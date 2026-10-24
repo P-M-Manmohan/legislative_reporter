@@ -22,6 +22,8 @@ def migrate_db():
 
         migrations = {
             "summary": "ALTER TABLE videos ADD COLUMN summary TEXT",
+            "summary_english": "ALTER TABLE videos ADD COLUMN summary_english TEXT",
+            "title_english": "ALTER TABLE videos ADD COLUMN title_english TEXT",
             "transcript_status": (
                 "ALTER TABLE videos ADD COLUMN "
                 "transcript_status TEXT NOT NULL DEFAULT 'pending'"
@@ -42,6 +44,12 @@ def migrate_db():
                 conn.execute(sql)
                 print(f"Added column: {column}")
 
+        # Existing saved summaries are generated from text_english transcript segments.
+        conn.execute("""
+            UPDATE videos SET summary_english = summary
+            WHERE summary_english IS NULL AND summary IS NOT NULL
+        """)
+
 def init_db():
     with get_connection() as conn:
         conn.executescript("""
@@ -52,6 +60,8 @@ def init_db():
                 published_at TEXT,
                 duration_seconds INTEGER,
                 summary TEXT,
+                summary_english TEXT,
+                title_english TEXT,
                 transcript_status TEXT NOT NULL DEFAULT 'pending',
                 transcript_error TEXT,
                 discovered_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
