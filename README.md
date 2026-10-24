@@ -43,7 +43,8 @@ flowchart TD
 | Translation (`backend/translator.py`) | Calls OpenAI to translate transcript segments while using neighboring context. |
 | Capacitor (`android/`) | Packages the built web frontend as an Android app. It does not contain a separate backend. |
 | Official member directory | `GET /api/members` fetches and parses the public Assembly member list and portrait URLs; results are cached in the backend process for one hour. |
-
+### DEMO LINK - https://legislative-reporter.onrender.com 
+Designed with android device in mind but can be viewed as a web app
 ### Main data flows
 
 **Transcript ingestion and summary**
