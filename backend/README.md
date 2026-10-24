@@ -210,6 +210,11 @@ and Swagger UI at `/docs` are the source of truth if routes change.
                                                                        transcript using
                                                                        SerpApi
 
+  `GET`                   `/api/videos`                                List transcript videos
+
+  `POST`                  `/api/videos/{video_id}/summary`             Generate or retrieve a
+                                                                       transcript-cited summary
+
   `GET`                   `/api/jobs/{job_id}`                         Retrieve the
                                                                        status/details for an
                                                                        ingestion job
@@ -240,6 +245,37 @@ curl -X POST http://127.0.0.1:8000/api/ingest/youtube \
 
 The response structure depends on the current `main.py` implementation.
 Use Swagger UI to inspect required fields and the response.
+
+### Transcript summaries with timestamp citations
+
+`GET /api/videos` lists up to 10 latest videos that have transcript
+segments. `POST /api/videos/{video_id}/summary` creates a concise summary
+from all stored segments for that video, or returns its saved summary.
+Every sentence includes citations to source segment IDs and timestamps.
+The JSON summary is persisted in the `videos.summary` column. The column is
+added automatically to existing databases and included when a new database
+is initialized. Set `OPENAI_API_KEY` (and optionally `SUMMARY_MODEL`) to
+enable summary generation.
+
+The frontend must be built with `VITE_API_BASE_URL` set to the reachable
+backend URL. For a phone on the same Wi-Fi as a development computer, use
+that computer's LAN address and allow the phone's origin in
+`FRONTEND_ORIGINS`; `localhost` on the phone points to the phone itself.
+
+## Export transcript segments to CSV
+
+After a video transcript has been ingested, export the latest 20 segments
+from the backend directory with:
+
+``` powershell
+python export_transcript_segments.py
+```
+
+The script writes `transcript_segments.csv` beside itself as UTF-8 with a
+BOM so Malayalam text opens correctly in Excel. It reads directly from
+`data/legislative.db` and does not pass transcript text through PowerShell's
+native-command output encoding. Run it again after ingesting more videos to
+refresh the export.
 
 ### `POST /api/ingest`
 

@@ -220,5 +220,5 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-
-data
+export_transcript_segments.py
+transcript_segments.csv

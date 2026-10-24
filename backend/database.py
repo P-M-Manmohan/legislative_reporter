@@ -21,6 +21,7 @@ def migrate_db():
         }
 
         migrations = {
+            "summary": "ALTER TABLE videos ADD COLUMN summary TEXT",
             "transcript_status": (
                 "ALTER TABLE videos ADD COLUMN "
                 "transcript_status TEXT NOT NULL DEFAULT 'pending'"
@@ -50,6 +51,7 @@ def init_db():
                 url TEXT NOT NULL,
                 published_at TEXT,
                 duration_seconds INTEGER,
+                summary TEXT,
                 transcript_status TEXT NOT NULL DEFAULT 'pending',
                 transcript_error TEXT,
                 discovered_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,

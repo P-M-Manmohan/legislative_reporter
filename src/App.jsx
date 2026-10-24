@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Bell, Bookmark, BookmarkCheck, Check, ChevronRig
 import { App as CapacitorApp } from '@capacitor/app';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { assemblyImage, questions, topics } from './data';
+import { apiFetch } from './services/api';
 
 const nav = [{ id: 'home', label: 'Home', icon: Home }, { id: 'search', label: 'Search', icon: Search }, { id: 'verify', label: 'Verify', icon: Check }, { id: 'mla', label: 'MLAs', icon: Users }, { id: 'more', label: 'More', icon: MoreHorizontal }];
 function stored(key, initial) { const [value, setValue] = useState(() => { try { return JSON.parse(localStorage.getItem(key)) ?? initial; } catch { return initial; } }); useEffect(() => localStorage.setItem(key, JSON.stringify(value)), [key, value]); return [value, setValue]; }
@@ -50,7 +51,7 @@ export default function App() {
   const submit = (e) => { e.preventDefault(); if (claim.trim()) { setResult({ claim: claim.trim() }); setScreen('verification'); } };
   if (splash) return <div className="app-shell splash-shell"><main className="app-main"><Welcome /></main></div>;
   return <div className="app-shell"><main className="app-main">
-    {screen === 'home' && <HomePage {...shared} />}{screen === 'search' && <SearchPage {...shared} />}{screen === 'question' && <QuestionPage {...shared} question={selected} />}{screen === 'verify' && <VerifyPage {...shared} claim={claim} setClaim={setClaim} onSubmit={submit} />}{screen === 'verification' && <VerificationPage {...shared} result={result} />}{screen === 'mla' && <MlaPage {...shared} />}{screen === 'more' && <MorePage {...shared} />}{screen === 'about' && <AboutPage setScreen={setScreen} />}{screen === 'saved-questions' && <SavedQuestionsPage {...shared} />}{screen === 'saved-searches' && <EmptyMenuPage title="Saved Searches" message="You have no saved searches yet." setScreen={setScreen} />}{screen === 'notifications' && <EmptyMenuPage title="Notifications" message="You have no notifications yet." setScreen={setScreen} />}{screen === 'help' && <HelpPage setScreen={setScreen} />}
+    {screen === 'home' && <HomePage {...shared} />}{screen === 'search' && <SearchPage {...shared} />}{screen === 'topics' && <TopicsPage {...shared} />}{screen === 'all-summaries' && <AllVideoSummariesPage {...shared} />}{screen === 'live' && <LivePage setScreen={setScreen} />}{screen === 'question' && <QuestionPage {...shared} question={selected} />}{screen === 'verify' && <VerifyPage {...shared} claim={claim} setClaim={setClaim} onSubmit={submit} />}{screen === 'verification' && <VerificationPage {...shared} result={result} />}{screen === 'mla' && <MlaPage {...shared} />}{screen === 'more' && <MorePage {...shared} />}{screen === 'about' && <AboutPage setScreen={setScreen} />}{screen === 'saved-questions' && <SavedQuestionsPage {...shared} />}{screen === 'saved-searches' && <EmptyMenuPage title="Saved Searches" message="You have no saved searches yet." setScreen={setScreen} />}{screen === 'notifications' && <EmptyMenuPage title="Notifications" message="You have no notifications yet." setScreen={setScreen} />}{screen === 'help' && <HelpPage setScreen={setScreen} />}
   </main>{screen !== 'welcome' && <nav className="bottom-nav">{nav.map(({ id, label, icon: Icon }) => <button className={screen === id ? 'active' : ''} key={id} onClick={() => setScreen(id)}><Icon size={19} /><span>{label}</span></button>)}</nav>}</div>;
 }
 function Brand({ language, setLanguage }) {
@@ -113,42 +114,155 @@ function HomePage({ language, setLanguage, setScreen }) {
       <div className="session-card">
         <img src={assemblyImage} alt="Kerala Legislative Assembly" />
         <div className="session-overlay">
-          <span className="live-pill">● Live</span>
-          <small>14 Oct 2024</small>
+          <span className="live-pill">Assembly session</span>
+          <small>Kerala Legislative Assembly</small>
           <strong>Question Hour</strong>
-          <button type="button" className="watch-button" onClick={() => setScreen('search')}>
+          <button type="button" className="watch-button" onClick={() => setScreen('live')}>
             <Play size={12} fill="currentColor" /> Watch Now
           </button>
         </div>
       </div>
 
-      <div className="section-heading latest-updates-heading">
-        <h2 className="section-title">Latest Assembly Updates</h2>
-      </div>
-      <div className="updates-list" aria-live="polite">
-        <p className="updates-empty">No verified Assembly updates are available right now.</p>
-      </div>
-
-      <div className="section-heading">
-        <h2 className="section-title">Trending topics</h2>
-        <button type="button" className="link-button" onClick={() => setScreen('search')}>
-          See all →
-        </button>
-      </div>
-      <div className="chips trending-topics">
-        {topics.map((t) => (
-          <button type="button" key={t} onClick={() => setScreen('search')}>
-            {t}
-          </button>
-        ))}
-      </div>
-      <p className="demo-note">
-        <Info size={13} /> Updates appear here when verified Assembly records are available.
-      </p>
+      <VideoSummarySection setScreen={setScreen} />
     </section>
   );
 }
+function VideoSummarySection({ allVideos = false, setScreen }) {
+  const [videos, setVideos] = useState([]);
+  const [message, setMessage] = useState('');
+  const friendlyError = (error) => error.message.includes('Backend is not configured')
+    ? 'Set VITE_API_BASE_URL to a backend address this device can reach.'
+    : error.message;
+  useEffect(() => {
+    let active = true;
+    const refresh = () => apiFetch(`/api/videos?limit=${allVideos ? 500 : 10}`)
+      .then((data) => { if (active) { setVideos(Array.isArray(data) ? data : []); setMessage(''); } })
+      .catch((error) => { if (active) setMessage(friendlyError(error)); });
+    refresh();
+    const interval = window.setInterval(refresh, 30000);
+    window.addEventListener('focus', refresh);
+    return () => { active = false; window.clearInterval(interval); window.removeEventListener('focus', refresh); };
+  }, [allVideos]);
+  return <section className="video-summaries" aria-labelledby="video-summaries-title">
+    <div className="section-heading"><h2 className="section-title" id="video-summaries-title">Video summaries</h2></div>
+    {videos.length > 0 ? <div className="video-summary-list">{videos.map((video) => <article className="video-summary-card" key={video.video_id}>
+      <div className="video-summary-meta">{formatVideoDate(video.published_at)} · {video.segment_count} transcript segments</div>
+      <h3>{video.title}</h3>
+      <VideoSummaryPanel video={video} />
+    </article>)}</div> : <p className="video-summary-status">{message || 'No transcript videos are available yet.'}</p>}
+    {message && videos.length > 0 && <p className="video-summary-status" role="status">{message}</p>}
+  </section>;
+}
+function AllVideoSummariesPage({ setScreen }) {
+  return <section className="screen-pad">
+    <TopBar title="Video summaries" onBack={() => setScreen('home')} />
+    <VideoSummarySection allVideos setScreen={setScreen} />
+  </section>;
+}
+function LivePage({ setScreen }) {
+  const nextSitting = [26, 27, 28, 29]
+    .map((day) => new Date(`2026-10-${day}T09:00:00+05:30`))
+    .find((date) => date.getTime() > Date.now());
+  const nextSittingLabel = nextSitting && new Intl.DateTimeFormat('en-IN', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata',
+  }).format(nextSitting);
+  return <section className="screen-pad">
+    <TopBar title="Assembly live session" onBack={() => setScreen('home')} />
+    <div className="content-block live-status-card">
+      <h3>Live stream</h3>
+      <p>The app cannot confirm an active live stream right now. Check the official Assembly webcast for the current broadcast.</p>
+      <a className="outline-button wide live-source-link" href="https://ondemandwebcast.niyamasabha.org/" target="_blank" rel="noreferrer">
+        Open official webcast <ExternalLink size={15} />
+      </a>
+    </div>
+    <div className="content-block">
+      <h3>Next scheduled live session</h3>
+      {nextSitting ? <p>{nextSittingLabel} at 9:00 AM IST. The session summons lists 9:00 AM as the meeting time; check the official notices or webcast in case the schedule changes.</p>
+        : <p>No later sitting time is available in the currently published Assembly calendar. Check the official notices for the next announcement.</p>}
+      <div className="live-source-links">
+        <a className="live-calendar-link" href="https://www.niyamasabha.org/codes/16kla/session_2/2%20Session%20Calender%20.pdf" target="_blank" rel="noreferrer">
+          Official sitting calendar <ExternalLink size={14} />
+        </a>
+        <a className="live-calendar-link" href="https://www.niyamasabha.org/codes/16kla/session_2/Notification%20-%20Summons%20-%20Second%20Session.pdf" target="_blank" rel="noreferrer">
+          Session summons <ExternalLink size={14} />
+        </a>
+      </div>
+    </div>
+  </section>;
+}
+function VideoSummaryPanel({ video }) {
+  const [open, setOpen] = useState(false);
+  const [summary, setSummary] = useState(video.summary || null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [expandedSentence, setExpandedSentence] = useState(null);
+  const toggleSummary = async () => {
+    if (open) { setOpen(false); return; }
+    if (!summary?.sentences?.length) {
+      setLoading(true);
+      setError('');
+      try {
+        const data = await apiFetch(`/api/videos/${encodeURIComponent(video.video_id)}/summary`, { method: 'POST' });
+        setSummary(data);
+      } catch (fetchError) {
+        setError(fetchError.message || 'Could not load the saved summary.');
+        setLoading(false);
+        return;
+      }
+      setLoading(false);
+    }
+    setOpen(true);
+  };
+  return <div className="video-summary-expand">
+    <button type="button" className="video-summary-action" onClick={toggleSummary} disabled={loading} aria-expanded={open}>
+      {loading ? 'Loading summary…' : open ? 'Hide summary' : 'Show summary'}
+      <ChevronRight size={16} />
+    </button>
+    {error && <p className="video-summary-status" role="status">{error}</p>}
+    {open && summary?.sentences?.length > 0 && <div className="summary-panel">
+      <p className="summary-help">Transcript summary · tap a sentence to view source timestamps.</p>
+      <p className="summary-paragraph">{summary.sentences.map((item, index) => <span className="summary-sentence-wrap" key={`${index}-${item.text}`}>
+        <button type="button" className="summary-sentence" aria-expanded={expandedSentence === index} onClick={() => setExpandedSentence(expandedSentence === index ? null : index)}>{item.text}</button>{' '}
+        {expandedSentence === index && <span className="summary-citations" role="dialog" aria-label="Source timestamps">
+          <span>Verify in the original video</span>
+          {(item.citations || []).map((citation) => <a key={citation.segment_id} href={`https://www.youtube.com/watch?v=${encodeURIComponent(summary.video_id)}&t=${Math.floor(citation.start_seconds)}s`} target="_blank" rel="noreferrer">
+            {formatTimestamp(citation.start_seconds)} <ExternalLink size={13} />
+          </a>)}
+        </span>}
+      </span>)}</p>
+      <small className="summary-saved-note">Saved with this video’s transcript.</small>
+    </div>}
+  </div>;
+}
+function formatTimestamp(seconds) {
+  const total = Math.max(0, Math.floor(Number(seconds) || 0));
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
+}
+function formatVideoDate(value) {
+  if (!value) return 'Assembly video';
+  const normalized = /^\d{8}$/.test(value) ? `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}` : value;
+  const date = new Date(normalized);
+  return Number.isNaN(date.getTime()) ? 'Assembly video' : date.toLocaleDateString();
+}
 function SearchPage({ setScreen, openQuestion }) { const [query, setQuery] = useState(''); const [tab, setTab] = useState('All'); const list = useMemo(() => questions.filter((q) => `${q.title} ${q.mla} ${q.category}`.toLowerCase().includes(query.toLowerCase()) && (tab === 'All' || tab === 'Questions' || tab === 'MLAs')), [query, tab]); return <section className="screen-pad"><TopBar title="Search" onBack={() => setScreen('home')} actions={<button className="icon-button"><Filter size={18} /></button>} /><div className="search-box filled"><Search size={17} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search in questions..." /><X size={16} onClick={() => setQuery('')} /></div><div className="tabs">{['All', 'Questions', 'MLAs', 'Topics'].map((t) => <button className={tab === t ? 'active' : ''} key={t} onClick={() => setTab(t)}>{t}</button>)}</div><div className="result-count">{list.length} results • Question Hour</div><div className="results">{list.map((q) => <QuestionCard key={q.id} question={q} onClick={() => openQuestion(q)} />)}</div>{!list.length && <EmptyState text="No questions match your search." />}</section>; }
+function TopicsPage({ setScreen, openQuestion }) {
+  const location = useLocation();
+  const [selectedTopic, setSelectedTopic] = useState(location.state?.topic || '');
+  const relatedQuestions = useMemo(() => questions.filter((question) =>
+    !selectedTopic || question.category === selectedTopic || question.tags?.includes(selectedTopic)
+  ), [selectedTopic]);
+  return <section className="screen-pad">
+    <TopBar title="Trending topics" onBack={() => setScreen('home')} />
+    <p className="page-intro">Choose a topic to explore related Assembly questions.</p>
+    <div className="chips topic-selector" aria-label="Trending topics">
+      {topics.map((topic) => <button type="button" aria-pressed={selectedTopic === topic} className={selectedTopic === topic ? 'selected' : ''} key={topic} onClick={() => setSelectedTopic(selectedTopic === topic ? '' : topic)}>{topic}</button>)}
+    </div>
+    {selectedTopic && <><h2 className="section-title">{selectedTopic}</h2>{relatedQuestions.length
+      ? <div className="results">{relatedQuestions.map((question) => <QuestionCard key={question.id} question={question} onClick={() => openQuestion(question)} />)}</div>
+      : <EmptyState text={`No verified Assembly questions are available for ${selectedTopic} yet.`} />}</>}
+    {!selectedTopic && <EmptyState text="Select a topic to view related Assembly questions." />}
+  </section>;
+}
 function QuestionCard({ question, onClick }) { return <button className="question-card" onClick={onClick}><div className="card-top"><span className="category-icon"><Search size={14} /></span><div><strong>{question.title}</strong><small>{question.date} · {question.session}</small></div><ChevronRight size={17} /></div><p>{question.preview}</p><div className="mla-row"><span className="avatar small">SP</span><small>Asked by <b>{question.mla}</b></small></div><div className="chips">{question.tags.map((t) => <span key={t}>{t}</span>)}</div></button>; }
 function QuestionPage({ setScreen, question, saved, toggleSaved }) { const share = () => navigator.share ? navigator.share({ title: question.title, url: location.href }) : navigator.clipboard?.writeText(question.title); return <section className="screen-pad"><TopBar title="Question details" onBack={() => setScreen('search')} actions={<><button className="icon-button" onClick={() => toggleSaved(question.id)}>{saved.includes(question.id) ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}</button><button className="icon-button" onClick={share}><Share2 size={18} /></button></>} /><div className="detail-heading"><span className="category-label">{question.category} · Question Hour</span><h1>{question.title}</h1><small>{question.date}</small></div><div className="person-card"><span className="avatar">SP</span><div><small>Asked by</small><strong>{question.mla}</strong><small>{question.party}</small></div><span className="verified-dot"><Check size={12} /></span></div><Content title="Question" tag="Original source">{question.malayalam}</Content><Content title="English translation">Will the government consider setting up a super speciality hospital in Kochi to improve access to advanced care?</Content><Content title="Government reply">{question.reply}</Content><button className="video-card"><span className="play-circle"><Play size={16} fill="currentColor" /></span><span><b>View Original Video</b><small>00:42:15 - 00:45:30</small></span><ExternalLink size={16} /></button><div className="detail-tags">{question.tags.map((t) => <span key={t}>{t}</span>)}</div></section>; }
 function Content({ title, tag, children }) { return <div className="content-block"><h3>{title}{tag && <span>{tag}</span>}</h3><p>{children}</p></div>; }

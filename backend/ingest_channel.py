@@ -245,7 +245,8 @@ def save_transcript(video_id, segments):
 
         conn.execute("""
             UPDATE videos
-            SET transcript_status = 'completed',
+            SET summary = NULL,
+                transcript_status = 'completed',
                 transcript_error = NULL,
                 updated_at = CURRENT_TIMESTAMP
             WHERE video_id = ?
@@ -275,6 +276,18 @@ def is_completed(video_id):
     return row and row["transcript_status"] == "completed"
 
 
+def generate_summary_if_missing(video_id, title):
+    """Create the persisted summary after transcript storage; keep ingestion resilient."""
+    try:
+        # Lazy import avoids loading the API module during ordinary helper imports.
+        from main import generate_and_store_video_summary
+
+        generate_and_store_video_summary(video_id)
+        logger.info("Saved transcript summary for %s", video_id)
+    except Exception:
+        logger.exception("Transcript saved, but summary generation failed for %s (%s)", video_id, title)
+
+
 def main():
     if not SERPAPI_KEY:
         raise RuntimeError(
@@ -299,6 +312,7 @@ def main():
                 "[%d/%d] Already completed: %s",
                 index, len(videos), video["title"],
             )
+            generate_summary_if_missing(video_id, video["title"])
             continue
 
         logger.info(
@@ -328,6 +342,8 @@ def main():
                 len(translated_segments),
                 video_id,
             )
+
+            generate_summary_if_missing(video_id, video["title"])
 
         except Exception as exc:
             logger.exception(

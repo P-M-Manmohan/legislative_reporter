@@ -12,13 +12,13 @@ flowchart LR
         State[Screen state and preferences]
         Storage[(Browser or Android WebView localStorage)]
         Assets[Static images and topic labels]
-        Fetch[Optional apiFetch helper]
+        Fetch[apiFetch helper]
     end
     subgraph Runtime[Delivery runtimes]
         Web[Vite web build]
         Android[Capacitor Android shell]
     end
-    Backend[Optional backend API<br/>not connected to screens]
+    Backend[FastAPI backend<br/>transcript database and summaries]
 
     Person --> React
     React <--> State
@@ -45,7 +45,8 @@ flowchart TD
     App --> Records[Question detail and saved records]
     App --> CSS[src/styles.css<br/>responsive layout, themes, text scale]
     App --> Data[src/data.js<br/>images, topic labels, empty questions]
-    App -. future data calls .-> API[src/services/api.js]
+    App --> Summaries[Transcript summaries and citations]
+    Summaries --> API[src/services/api.js]
 ```
 
 ### Startup and navigation
@@ -72,13 +73,26 @@ flowchart TD
 - The claim-verification screen is a frontend demonstration; its current result and source content are not backed by a verification service.
 - The MLA screen has selectable topic chips, but no verified MLA directory or related question records are connected.
 
-### Optional API helper
+### Transcript summaries
 
-`src/services/api.js` reads `VITE_API_BASE_URL` at build time. `apiFetch(path, options)` sends a browser `fetch` request to that base URL, checks the HTTP status, and parses JSON. If the variable is unset, it throws a configuration error. No screen currently imports or calls `apiFetch`, and no API endpoint contract is defined in this repository.
+`src/services/api.js` reads `VITE_API_BASE_URL` at build time. Home requests
+`GET /api/videos` and requests `POST /api/videos/{video_id}/summary` when a
+summary is opened. The backend summarizes all SQLite transcript segments for
+the selected video. Summary sentences cite segment IDs; the backend resolves
+those IDs to timestamps and saves the JSON result in `videos.summary`. Tapping
+a sentence reveals its timestamp citations, and each timestamp opens the
+original YouTube video at that exact time. The source CSV is an export only;
+the full database transcript is used so summaries are not limited to CSV row
+counts.
+
+The API needs `OPENAI_API_KEY` to generate a new summary. Set `VITE_API_BASE_URL`
+to a backend URL reachable by the device, and configure the backend's
+`FRONTEND_ORIGINS` for the app origin. A mobile device cannot use its own
+`localhost` to reach a development computer.
 
 ### Not implemented
 
-- Assembly record ingestion, validation, and refresh schedule.
+- Official Assembly record ingestion, validation, and refresh schedule.
 - Authentication and account management.
 - Backend persistence or cross-device synchronization for saved items.
 - Search history persistence, a notification service, or push notification setup.

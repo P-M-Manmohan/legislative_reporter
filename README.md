@@ -7,6 +7,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the system diagram, current data flow
 ## Features
 
 - Home screen with a featured Assembly session, trending topics, and a latest updates area.
+- Transcript summaries generated from stored video segments, with sentence-level timestamp citations that open the original YouTube video.
 - Search for available Assembly questions and browse MLA information.
 - Claim verification interface.
 - Preferences for language, dark mode, and text size.
@@ -17,7 +18,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the system diagram, current data flow
 
 The app currently has no verified Assembly records or MLA directory connected, so those screens may show empty states. The latest updates area, Saved Searches, and Notifications are also empty until their data sources are connected. Sign-in is not implemented because there is no authentication service configured.
 
-`src/services/api.js` contains a small fetch helper. Set `VITE_API_BASE_URL` to the backend base URL when a compatible backend is available. No specific backend endpoints are currently wired to the screens.
+Video summaries use the FastAPI backend. Set `VITE_API_BASE_URL` to a backend URL reachable from the browser or phone. Summary generation requires `OPENAI_API_KEY` on the backend. See [backend/README.md](backend/README.md) for API setup and mobile network configuration.
 
 ## Requirements
 
